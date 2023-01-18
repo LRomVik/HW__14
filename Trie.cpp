@@ -1,7 +1,7 @@
 #include "Trie.h"
 #include <iostream>
 
-TrieNode* getNewNode(void){
+TrieNode* getNewNode() {
 
 	TrieNode* pNode = new TrieNode;
 
@@ -13,6 +13,8 @@ TrieNode* getNewNode(void){
 
 	return pNode;
 }
+
+
 bool isNumeric(std::string const& str) {
 
 	auto it = str.begin();
@@ -20,53 +22,53 @@ bool isNumeric(std::string const& str) {
 		it++;
 	return !str.empty() && it == str.end();
 }
-void insert(TrieNode* root, std::string key){
-	
+
+
+void insert(TrieNode* root, std::string key) {
+
 	TrieNode* node = root;
 
-	for (int i = 0; i < key.length(); i++){
-		
+	for (int i = 0; i < key.length(); i++) {
+
 		int index = key[i] - 'a';
 
 		if (!node->children[index])
 			node->children[index] = getNewNode();
-		else{
+		else {
 			(node->children[index]->freq)++;
 		}
-
-		node = node->children[index];
+        node = node->children[index];
 	}
 	node->isEndOfWord = true;
-} 
-bool search(TrieNode* root, std::string key){
-	
+}
+bool search(TrieNode* root, std::string key) {
+
 	TrieNode* node = root;
 
-	for (int i = 0; i < key.length(); i++){
-		
+	for (int i = 0; i < key.length(); i++) {
+
 		int index = key[i] - 'a';
 		if (!node->children[index])
 			return false;
 
 		node = node->children[index];
 	}
+        return (node != nullptr && node->isEndOfWord);
+}
+bool isEmpty(TrieNode* root) {
 
-	return (node != nullptr && node->isEndOfWord);
-} 
-bool isEmpty(TrieNode* root){
-	
 	for (int i = 0; i < ALPHABET_SIZE; i++)
 		if (root->children[i])
 			return false;
 	return true;
-} 
-TrieNode* remove(TrieNode* root, std::string key, int depth = 0){
-	
+}
+TrieNode* remove(TrieNode* root, std::string key, int depth = 0) {
+
 	if (!root)
 		return nullptr;
 
 	if (depth == key.size()) {
- 
+
 		if (root->isEndOfWord)
 			root->isEndOfWord = false;
 
@@ -74,39 +76,36 @@ TrieNode* remove(TrieNode* root, std::string key, int depth = 0){
 			delete (root);
 			root = nullptr;
 		}
-
-		return root;
-	} 
+        return root;
+	}
 	int index = key[depth] - 'a';
 	root->children[index] = remove(root->children[index], key, depth + 1);
- 
+
 	if (isEmpty(root) && root->isEndOfWord == false) {
 		delete (root);
 		root = nullptr;
 	}
 	return root;
 }
-void findMinPrefixes(TrieNode* root, char buf[], int ind, std::string& res){
-	
-	if (ind == 0){
+void findMinPrefixes(TrieNode* root, char buf[], int ind, std::string& res) {
+
+	if (ind == 0) {
 		root->freq = 0;
 	}
-
-	if (root == nullptr)
+    if (root == nullptr)
 		return;
 
-	if (root->freq == 1){
-		
+	if (root->freq == 1) {
+
 		buf[ind] = '\0';
 		res += buf;
 		res += ' ';
 		std::cout << buf << " ";
 		return;
 	}
+    for (int i = 0; i < ALPHABET_SIZE; i++) {
 
-	for (int i = 0; i < ALPHABET_SIZE; i++){
-		
-		if (root->children[i] != nullptr){
+		if (root->children[i] != nullptr) {
 
 			buf[ind] = i + 'a';
 			std::cout << (int)buf[ind];
@@ -114,35 +113,34 @@ void findMinPrefixes(TrieNode* root, char buf[], int ind, std::string& res){
 		}
 	}
 }
+//Вывод слов из словаря
+void autoComplete(TrieNode* root, std::string wordPrefix) {
 
-void autoComplete(TrieNode* root, std::string wordPrefix){
-	
-	if (root->isEndOfWord) 
-		
-		std::cout << wordPrefix << std::endl;
+	if (root->isEndOfWord)
+        std::cout << wordPrefix << std::endl;
 
 	for (int i = 0; i < ALPHABET_SIZE; i++)
-		
-		if (root->children[i]){
-			
+
+		if (root->children[i]) {
+
 			char child = 'a' + i;
 			autoComplete(root->children[i], wordPrefix + child);
 		}
 }
+//Поиск в префиксном дереве конца префикса введенного
+void printoutWord(TrieNode* root, const std::string query) {
 
-void printoutWord(TrieNode* root, const std::string query){
-	
 	TrieNode* current = root;
-	for (char a : query){
-		
+	for (char a : query) {
+
 		int ind = a - 'a';
 
-		if (!current->children[ind])
+		if (!current->children[ind]) {
+			std::cout << "No words found in the library" << std::endl;
 			return;
-
-		current = current->children[ind];
+		}
+        current = current->children[ind];
 	}
-
-	autoComplete(current, query);
+    autoComplete(current, query);
 }
 

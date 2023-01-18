@@ -4,30 +4,29 @@
 
 int main(){
 	
-	TrieNode* storage = getNewNode();
-	insert(storage, "category");
-	insert(storage, "catalog");
-	insert(storage, "city");
-	insert(storage, "citro");
-	insert(storage, "bag");
-	insert(storage, "big");
-	insert(storage, "bagage");
-	insert(storage, "man");
-	insert(storage, "map");
-	insert(storage, "manual");
-	insert(storage, "trigonometry");
-	insert(storage, "trie");
-	insert(storage, "trump");
+	TrieNode* library = getNewNode();
+	insert(library, "category");
+	insert(library, "catalog");
+	insert(library, "city");
+	insert(library, "citro");
+	insert(library, "bag");
+	insert(library, "big");
+	insert(library, "bagage");
+	insert(library, "man");
+	insert(library, "map");
+	insert(library, "manual");
+	insert(library, "trigonometry");
+	insert(library, "trie");
+	insert(library, "trump");
 
-	std::cout << "Let start enter the first letters of the word and click 'Enter':" << std::endl;
-	bool online = true;
+	std::cout << "Let start to write in Latin first letters of the word and click 'Enter':" << std::endl;
+	bool enter = true;
 	std::string prefWord;
-	while (online){
+	while (enter){
 		std::cin >> prefWord;
 		if (isNumeric(prefWord) || prefWord.empty()) continue;
 		std::cout << std::endl;
-		printoutWord(storage, prefWord);
+		printoutWord(library, prefWord);
 		std::cout << std::endl;
-		prefWord.clear();
 	}
 }
